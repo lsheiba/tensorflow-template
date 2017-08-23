@@ -6,5 +6,22 @@ tensorflow_version: 1.2.0
 python_version: "2"
 serving_port: 9000
 tf_serving: false
+
+test1_version:
+  value: "1.2.0"
+  wizard:
+    name: "test1"
+      kind: select
+      options:
+      - "1.2.0"
+      - "latest"
+test2_version:
+  value: "2"
+  wizard:
+    name: "Python version"
+    kind: select
+    options:
+    - "2"
+    - "3"
 packages:
  - "git+https://github.com/kuberlab/python-mlboardclient.git"
