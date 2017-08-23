@@ -11,10 +11,10 @@ test1_version:
   value: "1.2.0"
   wizard:
     name: "test1"
-      kind: select
-      options:
-      - "1.2.0"
-      - "latest"
+    kind: select
+    options:
+    - "1.2.0"
+    - "latest"
 test2_version:
   value: "2"
   wizard:
