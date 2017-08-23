@@ -2,13 +2,13 @@ kind: MLApp
 metadata:
   name: tensorflow
 spec:
-  package_manager: "pip{{.python_version}}"
+  package_manager: "pip{{.python_version.value}}"
   packages:
     - names:
       {{- range $i, $value := .packages }}
       - "{{ $value }}"
       {{- end }}
-      manager: "pip{{.python_version}}"
+      manager: "pip{{.python_version.value}}"
   tasks:
   - name: prepare-data
     resources:
@@ -30,15 +30,15 @@ spec:
       restartPolicy: Never
       maxRestartCount: 0
       allowFail: true
-      {{- if eq .python_version "3" }}
+      {{- if eq .python_version.value "3" }}
       images:
-        gpu: "tensorflow/tensorflow:{{.tensorflow_version}}-gpu-py3"
-        cpu: "tensorflow/tensorflow:{{.tensorflow_version}}-py3"
+        gpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-gpu-py3"
+        cpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-py3"
       {{- end }}
-      {{- if eq .python_version "2" }}
+      {{- if eq .python_version.value "2" }}
       images:
-        gpu: "tensorflow/tensorflow:{{.tensorflow_version}}-gpu"
-        cpu: "tensorflow/tensorflow:{{.tensorflow_version}}"
+        gpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-gpu"
+        cpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}"
       {{- end }}
       command: python
       args: hello.py
@@ -66,15 +66,15 @@ spec:
       restartPolicy: Never
       maxRestartCount: 0
       allowFail: true
-      {{- if eq .python_version "3"}}
+      {{- if eq .python_version.value "3"}}
       images:
-        gpu: "tensorflow/tensorflow:{{.tensorflow_version}}-gpu-py3"
-        cpu: "tensorflow/tensorflow:{{.tensorflow_version}}-py3"
+        gpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-gpu-py3"
+        cpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-py3"
       {{- end }}
-      {{- if eq .python_version "2"}}
+      {{- if eq .python_version.value "2"}}
       images:
-        gpu: "tensorflow/tensorflow:{{.tensorflow_version}}-gpu"
-        cpu: "tensorflow/tensorflow:{{.tensorflow_version}}"
+        gpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-gpu"
+        cpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}"
       {{- end }}
       command: "echo \"WORKER: $REPLICA_INDEX\";echo \"PSS: $PS_NODES\"; echo \"WORKERS: $WORKER_NODES\"; echo \"BUILD: $BUILD_ID\"; python"
       args: hello.py
@@ -100,15 +100,15 @@ spec:
       replicas: 1
       restartPolicy: Never
       maxRestartCount: 0
-      {{- if eq .python_version "3"}}
+      {{- if eq .python_version.value "3"}}
       images:
-        gpu: "tensorflow/tensorflow:{{.tensorflow_version}}-gpu-py3"
-        cpu: "tensorflow/tensorflow:{{.tensorflow_version}}-py3"
+        gpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-gpu-py3"
+        cpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-py3"
       {{- end }}
-      {{- if eq .python_version "2"}}
+      {{- if eq .python_version.value "2"}}
       images:
-        gpu: "tensorflow/tensorflow:{{.tensorflow_version}}-gpu"
-        cpu: "tensorflow/tensorflow:{{.tensorflow_version}}"
+        gpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-gpu"
+        cpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}"
       {{- end }}
       command: "echo \"PS: $REPLICA_INDEX\";echo \"PSS: $PS_NODES\"; echo \"WORKERS: $WORKER_NODES\"; echo \"BUILD: $BUILD_ID\"; python"
       args: hello.py
@@ -124,15 +124,15 @@ spec:
       restartPolicy: Never
       maxRestartCount: 0
       allowFail: true
-      {{- if eq .python_version "3"}}
+      {{- if eq .python_version.value "3"}}
       images:
-        gpu: "tensorflow/tensorflow:{{.tensorflow_version}}-gpu-py3"
-        cpu: "tensorflow/tensorflow:{{.tensorflow_version}}-py3"
+        gpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-gpu-py3"
+        cpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-py3"
       {{- end }}
-      {{- if eq .python_version "2"}}
+      {{- if eq .python_version.value "2"}}
       images:
-        gpu: "tensorflow/tensorflow:{{.tensorflow_version}}-gpu"
-        cpu: "tensorflow/tensorflow:{{.tensorflow_version}}"
+        gpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-gpu"
+        cpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}"
       {{- end }}
       command: "echo \"BUILD: $BUILD_ID\"; python"
       args: hello.py
@@ -160,15 +160,15 @@ spec:
       restartPolicy: Never
       maxRestartCount: 0
       allowFail: true
-      {{- if eq .python_version "3" }}
+      {{- if eq .python_version.value "3" }}
       images:
-        gpu: "tensorflow/tensorflow:{{.tensorflow_version}}-gpu-py3"
-        cpu: "tensorflow/tensorflow:{{.tensorflow_version}}-py3"
+        gpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-gpu-py3"
+        cpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-py3"
       {{- end }}
-      {{- if eq .python_version "2" }}
+      {{- if eq .python_version.value "2" }}
       images:
-        gpu: "tensorflow/tensorflow:{{.tensorflow_version}}-gpu"
-        cpu: "tensorflow/tensorflow:{{.tensorflow_version}}"
+        gpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-gpu"
+        cpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}"
       {{- end }}
       command: python
       args: run_tasks.py
@@ -192,12 +192,12 @@ spec:
   uix:
   - name: jupyter
     displayName: Jupyter
-    {{- if eq .python_version "3"}}
+    {{- if eq .python_version.value "3"}}
     images:
       gpu: "kuberlab/mlboard-jupyter-gpu:latest-py3"
       cpu: "kuberlab/mlboard-jupyter:latest-py3"
     {{- end }}
-    {{- if eq .python_version "2"}}
+    {{- if eq .python_version.value "2"}}
     images:
       gpu: "kuberlab/mlboard-jupyter-gpu:latest"
       cpu: "kuberlab/mlboard-jupyter:latest"
@@ -248,15 +248,15 @@ spec:
     command: tensorflow_model_server
     args: "--port={{ .serving_port }} --model_name=$TASK_NAME --model_base_path=$TRAINING_DIR/$BUILD_ID"
     {{- else }}
-    {{- if eq .python_version "3"}}
+    {{- if eq .python_version.value "3"}}
     images:
-      gpu: "tensorflow/tensorflow:{{.tensorflow_version}}-gpu-py3"
-      cpu: "tensorflow/tensorflow:{{.tensorflow_version}}-py3"
+      gpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-gpu-py3"
+      cpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-py3"
     {{- end }}
-    {{- if eq .python_version "2"}}
+    {{- if eq .python_version.value "2"}}
     images:
-      gpu: "tensorflow/tensorflow:{{.tensorflow_version}}-gpu"
-      cpu: "tensorflow/tensorflow:{{.tensorflow_version}}"
+      gpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-gpu"
+      cpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}"
     {{- end }}
     workdir: "$SRC_DIR"
     command: python
@@ -288,7 +288,7 @@ spec:
     isTrainLogDir: true
     mountPath: /training
     name: training
-    clusterStorage: {{ .storage }}
+    clusterStorage: {{ .storage.value }}
     subPath: training
   - gitRepo:
       repository: {{ .src }}
@@ -301,17 +301,17 @@ spec:
     isTrainLogDir: false
     mountPath: /workspace/lib
     name: lib
-    clusterStorage: {{ .storage }}
+    clusterStorage: {{ .storage.value }}
     subPath: lib
   - isLibDir: false
     isTrainLogDir: false
     mountPath: /data
     name: data
-    clusterStorage: {{ .storage }}
+    clusterStorage: {{ .storage.value }}
     subPath: {{ .data_path }}
   - isLibDir: false
     isTrainLogDir: false
     mountPath: /code
     name: code
     subPath: code
-    clusterStorage: {{ .storage }}
+    clusterStorage: {{ .storage.value }}

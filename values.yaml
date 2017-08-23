@@ -1,13 +1,16 @@
-storage: default
-src: https://github.com/kuberlab-catalog/tensorflow
-src_path: /tensorflow/src
-data_path: data
-tensorflow_version: 1.2.0
-python_version: "2"
-serving_port: 9000
-tf_serving: false
+storage:
+ value: default
+ wizard:
+   name: "Storage Configuration"
+   kind: cluster_storage
 
-test1_version:
+src: https://github.com/kuberlab-catalog/tensorflow
+
+src_path: /tensorflow/src
+
+data_path: data
+
+tensorflow_version:
   value: "1.2.0"
   wizard:
     name: "test1"
@@ -15,7 +18,8 @@ test1_version:
     options:
     - "1.2.0"
     - "latest"
-test2_version:
+
+python_version:
   value: "2"
   wizard:
     name: "Python version"
@@ -23,5 +27,10 @@ test2_version:
     options:
     - "2"
     - "3"
+
+serving_port: 9000
+
+tf_serving: false
+
 packages:
  - "git+https://github.com/kuberlab/python-mlboardclient.git"
