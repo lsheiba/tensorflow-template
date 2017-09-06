@@ -5,8 +5,7 @@ storage:
    kind: cluster_storage
 
 src: https://github.com/kuberlab-catalog/tensorflow
-
-src_path: /tensorflow/src
+src_path: tensorflow
 
 data_path: data
 
@@ -16,7 +15,10 @@ tensorflow_version:
     name: "Tensorflow version"
     kind: select
     options:
+    - "1.0.0"
+    - "1.1.0"
     - "1.2.0"
+    - "1.3.0"
     - "latest"
 
 python_version:

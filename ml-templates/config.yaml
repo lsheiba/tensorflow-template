@@ -194,13 +194,13 @@ spec:
     displayName: Jupyter
     {{- if eq .python_version.value "3"}}
     images:
-      gpu: "kuberlab/mlboard-jupyter-gpu:latest-py3"
-      cpu: "kuberlab/mlboard-jupyter:latest-py3"
+      gpu: "kuberlab/mlboard-jupyter-tensorflow:{{.tensorflow_version.value}}-gpu-py3"
+      cpu: "kuberlab/mlboard-jupyter-tensorflow:{{.tensorflow_version.value}}-py3"
     {{- end }}
     {{- if eq .python_version.value "2"}}
     images:
-      gpu: "kuberlab/mlboard-jupyter-gpu:latest"
-      cpu: "kuberlab/mlboard-jupyter:latest"
+      gpu: "kuberlab/mlboard-jupyter-tensorflow:{{.tensorflow_version.value}}-gpu"
+      cpu: "kuberlab/mlboard-jupyter-tensorflow:{{.tensorflow_version.value}}"
     {{- end }}
     resources:
       requests:
@@ -296,7 +296,9 @@ spec:
     isTrainLogDir: false
     mountPath: /src
     name: src
+    {{- if .src_path }}
     subPath: "{{ .src_path }}"
+    {{- end }}
   - isLibDir: true
     isTrainLogDir: false
     mountPath: /workspace/lib
