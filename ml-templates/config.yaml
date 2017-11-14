@@ -236,6 +236,13 @@ spec:
       targetPort: 6006
       protocol: TCP
       name: http
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 1000m
+        memory: 2Gi
     volumes:
     - name: training
   serving:
