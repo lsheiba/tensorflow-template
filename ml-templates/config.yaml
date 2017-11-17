@@ -267,7 +267,7 @@ spec:
     subPath: lib
   - isLibDir: false
     isTrainLogDir: false
-    mountPath: /data
+    mountPath: /workspace/data
     name: data
     clusterStorage: {{ .storage.value }}
     subPath: {{ .data_path }}
