@@ -4,9 +4,6 @@ storage:
    name: "Storage Configuration"
    kind: cluster_storage
 
-src: https://github.com/kuberlab-catalog/tensorflow
-src_path: tensorflow/src
-
 data_path: data
 
 tensorflow_version:

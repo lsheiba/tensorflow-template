@@ -40,25 +40,18 @@ spec:
         gpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-gpu"
         cpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}"
       {{- end }}
-      command: python
-      args: hello.py
+      command: python hello.py
       workdir: "$SRC_DIR"
       resources:
         accelerators:
           gpu: 0
-          dedicated_gpu: true
         requests:
           cpu: 100m
           memory: 1Gi
         limits:
           cpu: 1000m
           memory: 8Gi
-      volumes:
-      - name: lib
-      - name: training
-      - name: src
-      - name: data
-      - name: code
+      default_volume_mapping: true
   - name: parallel
     resources:
     - name: worker
@@ -76,26 +69,19 @@ spec:
         gpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-gpu"
         cpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}"
       {{- end }}
-      command: "echo \"WORKER: $REPLICA_INDEX\";echo \"PSS: $PS_NODES\"; echo \"WORKERS: $WORKER_NODES\"; echo \"BUILD: $BUILD_ID\"; python"
-      args: hello.py
+      command: "echo \"WORKER: $REPLICA_INDEX\";echo \"PSS: $PS_NODES\"; echo \"WORKERS: $WORKER_NODES\"; echo \"BUILD: $BUILD_ID\"; python hello.py"
       workdir: "$SRC_DIR"
       resources:
         accelerators:
           gpu: 0
-          dedicated_gpu: true
         requests:
           cpu: 100m
-          memory: 256Mi
+          memory: 64Mi
         limits:
           cpu: 1000m
           memory: 4Gi
       port: 2222
-      volumes:
-      - name: lib
-      - name: training
-      - name: src
-      - name: data
-      - name: code
+      default_volume_mapping: true
     - name: ps
       replicas: 1
       restartPolicy: Never
@@ -134,25 +120,18 @@ spec:
         gpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-gpu"
         cpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}"
       {{- end }}
-      command: "echo \"BUILD: $BUILD_ID\"; python"
-      args: hello.py
+      command: "echo \"BUILD: $BUILD_ID\"; python hello.py"
       workdir: "$SRC_DIR"
       resources:
         accelerators:
           gpu: 0
-          dedicated_gpu: true
         requests:
           cpu: 100m
-          memory: 256Mi
+          memory: 64Mi
         limits:
           cpu: 1000m
           memory: 4Gi
-      volumes:
-      - name: lib
-      - name: training
-      - name: src
-      - name: data
-      - name: code
+      default_volume_mapping: true
   - name: workflow
     resources:
     - name: tasks
@@ -170,25 +149,18 @@ spec:
         gpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-gpu"
         cpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}"
       {{- end }}
-      command: python
-      args: run_tasks.py
+      command: python run_tasks.py
       workdir: "$SRC_DIR"
       resources:
         accelerators:
           gpu: 0
-          dedicated_gpu: true
         requests:
           cpu: 100m
-          memory: 256Mi
+          memory: 64Mi
         limits:
           cpu: 500m
           memory: 1Gi
-      volumes:
-      - name: lib
-      - name: training
-      - name: src
-      - name: data
-      - name: code
+      default_volume_mapping: true
   uix:
   - name: jupyter
     displayName: Jupyter
@@ -205,7 +177,7 @@ spec:
     resources:
       requests:
         cpu: 100m
-        memory: 256Mi
+        memory: 64Mi
       limits:
         cpu: 1000m
         memory: 4Gi
@@ -214,21 +186,11 @@ spec:
       targetPort: 8888
       protocol: TCP
       name: http
-    volumes:
-    - name: lib
-      mountPath: /notebooks/lib
-    - name: src
-      mountPath: /notebooks/src
-    - name: training
-      mountPath: /notebooks/training
-    - name: data
-      mountPath: /notebooks/data
-    - name: code
-      mountPath: /notebooks
+    default_volume_mapping: true
+    default_mount_path: "/notebooks"
   - name: tensorboard
     displayName: Tensorboard
-    command: "tensorboard"
-    args: "--logdir=$TRAINING_DIR"
+    command: "tensorboard --logdir=$TRAINING_DIR"
     images:
       cpu: "lsheiba/tensorflow-ls-devel"
     ports:
@@ -266,13 +228,11 @@ spec:
       cpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}"
     {{- end }}
     workdir: "$SRC_DIR"
-    command: python
-    args: hello.py
+    command: python hello.py
     {{- end }}
     resources:
       accelerators:
         gpu: 0
-        dedicated_gpu: true
       requests:
         cpu: 100m
         memory: 128Mi
@@ -284,28 +244,21 @@ spec:
       targetPort: {{ .serving_port }}
       protocol: TCP
       name: http
-    volumes:
-    - name: training
-    - name: data
-    - name: src
-    - name: lib
-    - name: code
+    default_volume_mapping: true
   volumes:
   - isLibDir: false
     isTrainLogDir: true
-    mountPath: /training
+    mountPath: /workspace/training
     name: training
     clusterStorage: {{ .storage.value }}
     subPath: training
   - gitRepo:
-      repository: {{ .src }}
+      repository: https://github.com/kuberlab-catalog/tensorflow
     isLibDir: false
     isTrainLogDir: false
-    mountPath: /src
+    mountPath: /workspace/src
     name: src
-    {{- if .src_path }}
-    subPath: "{{ .src_path }}"
-    {{- end }}
+    subPath: tensorflow/src
   - isLibDir: true
     isTrainLogDir: false
     mountPath: /workspace/lib
@@ -320,7 +273,7 @@ spec:
     subPath: {{ .data_path }}
   - isLibDir: false
     isTrainLogDir: false
-    mountPath: /code
+    mountPath: /workspace/code
     name: code
     subPath: code
     clusterStorage: {{ .storage.value }}
