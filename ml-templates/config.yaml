@@ -187,7 +187,6 @@ spec:
       protocol: TCP
       name: http
     default_volume_mapping: true
-    default_mount_path: "/notebooks"
   - name: tensorboard
     displayName: Tensorboard
     command: "tensorboard --logdir=$TRAINING_DIR"
@@ -247,33 +246,28 @@ spec:
     default_volume_mapping: true
   volumes:
   - isLibDir: false
-    isTrainLogDir: true
-    mountPath: /workspace/training
+    mountPath: /notebooks/training
     name: training
     clusterStorage: {{ .storage.value }}
     subPath: training
   - gitRepo:
       repository: https://github.com/kuberlab-catalog/tensorflow
     isLibDir: false
-    isTrainLogDir: false
-    mountPath: /workspace/src
+    mountPath: /notebooks/src
     name: src
     subPath: tensorflow/src
   - isLibDir: true
-    isTrainLogDir: false
-    mountPath: /workspace/lib
+    mountPath: /notebooks/lib
     name: lib
     clusterStorage: {{ .storage.value }}
     subPath: lib
   - isLibDir: false
-    isTrainLogDir: false
-    mountPath: /workspace/data
+    mountPath: /notebooks/data
     name: data
     clusterStorage: {{ .storage.value }}
     subPath: {{ .data_path }}
   - isLibDir: false
-    isTrainLogDir: false
-    mountPath: /workspace/code
+    mountPath: /notebooks
     name: code
     subPath: code
     clusterStorage: {{ .storage.value }}
