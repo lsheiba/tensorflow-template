@@ -18,12 +18,13 @@ def main():
 
     current_task_name = os.environ.get('TASK_NAME')
     LOG.info("Current task name = %s" % current_task_name)
-    current_app = os.environ['APP_NAME']
-    current_app_id = os.environ['APP_ID']
+    current_project = os.environ['PROJECT_NAME']
+    current_workspace = os.environ['WORKSPACE_ID']
     
-    LOG.info("Current app name = %s" % current_app)
-    LOG.info("Current app id = %s" % current_app_id)
+    LOG.info("Current project = %s" % current_project)
+    LOG.info("Current workspace = %s" % current_workspace)
 
+    current_app_id = current_workspace + '-' + current_project
     app = ml.apps.get(current_app_id)
     
     for task in app.tasks:
