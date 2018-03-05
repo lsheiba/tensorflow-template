@@ -19,14 +19,7 @@ def main():
     current_task_name = os.environ.get('TASK_NAME')
     LOG.info("Current task name = %s" % current_task_name)
 
-    current_project = os.environ['PROJECT_NAME']
-    current_workspace = os.environ['WORKSPACE_ID']
-    
-    LOG.info("Current project = %s" % current_project)
-    LOG.info("Current workspace = %s" % current_workspace)
-
-    current_app_id = current_workspace + '-' + current_project
-    app = ml.apps.get(current_app_id)
+    app = ml.apps.get()
     
     for task in app.tasks:
         if task.name == current_task_name:
