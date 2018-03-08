@@ -17,8 +17,14 @@ spec:
       restartPolicy: Never
       maxRestartCount: 1
       allowFail: true
+      {{- if eq .python_version.value "3" }}
       images:
-        cpu: busybox
+        cpu: "kuberlab/tensorflow:cpu-36-{{.tensorflow_version.value}}-full"
+      {{- end }}
+      {{- if eq .python_version.value "2" }}
+      images:
+        cpu: "kuberlab/tensorflow:cpu-27-{{.tensorflow_version.value}}-full"
+      {{- end }}
       command: "echo \"Uploading Data\";echo \"Done!!!\""
       workdir: "$DATA_DIR"
       volumes:
@@ -32,13 +38,13 @@ spec:
       allowFail: true
       {{- if eq .python_version.value "3" }}
       images:
-        gpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-gpu-py3"
-        cpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-py3"
+        gpu: "kuberlab/tensorflow:gpu-36-{{.tensorflow_version.value}}-full"
+        cpu: "kuberlab/tensorflow:cpu-36-{{.tensorflow_version.value}}-full"
       {{- end }}
       {{- if eq .python_version.value "2" }}
       images:
-        gpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-gpu"
-        cpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}"
+        gpu: "kuberlab/tensorflow:gpu-27-{{.tensorflow_version.value}}-full"
+        cpu: "kuberlab/tensorflow:cpu-27-{{.tensorflow_version.value}}-full"
       {{- end }}
       command: python hello.py
       workdir: "$SRC_DIR"
@@ -47,7 +53,7 @@ spec:
           gpu: 0
         requests:
           cpu: 100m
-          memory: 1Gi
+          memory: 64Mi
         limits:
           cpu: 1000m
           memory: 8Gi
@@ -59,15 +65,15 @@ spec:
       restartPolicy: Never
       maxRestartCount: 0
       allowFail: true
-      {{- if eq .python_version.value "3"}}
+      {{- if eq .python_version.value "3" }}
       images:
-        gpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-gpu-py3"
-        cpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-py3"
+        gpu: "kuberlab/tensorflow:gpu-36-{{.tensorflow_version.value}}-full"
+        cpu: "kuberlab/tensorflow:cpu-36-{{.tensorflow_version.value}}-full"
       {{- end }}
-      {{- if eq .python_version.value "2"}}
+      {{- if eq .python_version.value "2" }}
       images:
-        gpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-gpu"
-        cpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}"
+        gpu: "kuberlab/tensorflow:gpu-27-{{.tensorflow_version.value}}-full"
+        cpu: "kuberlab/tensorflow:cpu-27-{{.tensorflow_version.value}}-full"
       {{- end }}
       command: "echo \"WORKER: $REPLICA_INDEX\";echo \"PSS: $PS_NODES\"; echo \"WORKERS: $WORKER_NODES\"; echo \"BUILD: $BUILD_ID\"; python hello.py"
       workdir: "$SRC_DIR"
@@ -86,15 +92,15 @@ spec:
       replicas: 1
       restartPolicy: Never
       maxRestartCount: 0
-      {{- if eq .python_version.value "3"}}
+      {{- if eq .python_version.value "3" }}
       images:
-        gpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-gpu-py3"
-        cpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-py3"
+        gpu: "kuberlab/tensorflow:gpu-36-{{.tensorflow_version.value}}-full"
+        cpu: "kuberlab/tensorflow:cpu-36-{{.tensorflow_version.value}}-full"
       {{- end }}
-      {{- if eq .python_version.value "2"}}
+      {{- if eq .python_version.value "2" }}
       images:
-        gpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-gpu"
-        cpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}"
+        gpu: "kuberlab/tensorflow:gpu-27-{{.tensorflow_version.value}}-full"
+        cpu: "kuberlab/tensorflow:cpu-27-{{.tensorflow_version.value}}-full"
       {{- end }}
       command: "echo \"PS: $REPLICA_INDEX\";echo \"PSS: $PS_NODES\"; echo \"WORKERS: $WORKER_NODES\"; echo \"BUILD: $BUILD_ID\"; python"
       args: hello.py
@@ -103,6 +109,7 @@ spec:
       volumes:
       - name: src
       - name: code
+      - name: training
   - name: export
     resources:
     - name: worker
@@ -110,15 +117,15 @@ spec:
       restartPolicy: Never
       maxRestartCount: 0
       allowFail: true
-      {{- if eq .python_version.value "3"}}
+      {{- if eq .python_version.value "3" }}
       images:
-        gpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-gpu-py3"
-        cpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-py3"
+        gpu: "kuberlab/tensorflow:gpu-36-{{.tensorflow_version.value}}-full"
+        cpu: "kuberlab/tensorflow:cpu-36-{{.tensorflow_version.value}}-full"
       {{- end }}
-      {{- if eq .python_version.value "2"}}
+      {{- if eq .python_version.value "2" }}
       images:
-        gpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-gpu"
-        cpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}"
+        gpu: "kuberlab/tensorflow:gpu-27-{{.tensorflow_version.value}}-full"
+        cpu: "kuberlab/tensorflow:cpu-27-{{.tensorflow_version.value}}-full"
       {{- end }}
       command: "echo \"BUILD: $BUILD_ID\"; python hello.py"
       workdir: "$SRC_DIR"
@@ -141,13 +148,13 @@ spec:
       allowFail: true
       {{- if eq .python_version.value "3" }}
       images:
-        gpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-gpu-py3"
-        cpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-py3"
+        gpu: "kuberlab/tensorflow:gpu-36-{{.tensorflow_version.value}}-full"
+        cpu: "kuberlab/tensorflow:cpu-36-{{.tensorflow_version.value}}-full"
       {{- end }}
       {{- if eq .python_version.value "2" }}
       images:
-        gpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-gpu"
-        cpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}"
+        gpu: "kuberlab/tensorflow:gpu-27-{{.tensorflow_version.value}}-full"
+        cpu: "kuberlab/tensorflow:cpu-27-{{.tensorflow_version.value}}-full"
       {{- end }}
       command: python run_tasks.py
       workdir: "$SRC_DIR"
@@ -164,15 +171,15 @@ spec:
   uix:
   - name: jupyter
     displayName: Jupyter
-    {{- if eq .python_version.value "3"}}
+    {{- if eq .python_version.value "3" }}
     images:
-      gpu: "kuberlab/mlboard-jupyter-tensorflow:{{.tensorflow_version.value}}-gpu-py3"
-      cpu: "kuberlab/mlboard-jupyter-tensorflow:{{.tensorflow_version.value}}-py3"
+      gpu: "kuberlab/tensorflow:gpu-36-{{.tensorflow_version.value}}-full"
+      cpu: "kuberlab/tensorflow:cpu-36-{{.tensorflow_version.value}}-full"
     {{- end }}
-    {{- if eq .python_version.value "2"}}
+    {{- if eq .python_version.value "2" }}
     images:
-      gpu: "kuberlab/mlboard-jupyter-tensorflow:{{.tensorflow_version.value}}-gpu"
-      cpu: "kuberlab/mlboard-jupyter-tensorflow:{{.tensorflow_version.value}}"
+      gpu: "kuberlab/tensorflow:gpu-27-{{.tensorflow_version.value}}-full"
+      cpu: "kuberlab/tensorflow:cpu-27-{{.tensorflow_version.value}}-full"
     {{- end }}
     resources:
       requests:
@@ -190,8 +197,16 @@ spec:
   - name: tensorboard
     displayName: Tensorboard
     command: "tensorboard --logdir=$TRAINING_DIR"
+    {{- if eq .python_version.value "3" }}
     images:
-      cpu: "lsheiba/tensorflow-ls-devel"
+      gpu: "kuberlab/tensorflow:gpu-36-{{.tensorflow_version.value}}-full"
+      cpu: "kuberlab/tensorflow:cpu-36-{{.tensorflow_version.value}}-full"
+    {{- end }}
+    {{- if eq .python_version.value "2" }}
+    images:
+      gpu: "kuberlab/tensorflow:gpu-27-{{.tensorflow_version.value}}-full"
+      cpu: "kuberlab/tensorflow:cpu-27-{{.tensorflow_version.value}}-full"
+    {{- end }}
     ports:
     - port: 6006
       targetPort: 6006
@@ -210,21 +225,28 @@ spec:
   - name: serving
     displayName: Serving
     {{- if .tf_serving }}
+    {{- if eq .python_version.value "3" }}
     images:
-      gpu: "kuberlab/tensorflow-serving:latest-gpu"
-      cpu: "kuberlab/tensorflow-serving:latest"
+      gpu: "kuberlab/tensorflow:gpu-36-{{.tensorflow_version.value}}-full"
+      cpu: "kuberlab/tensorflow:cpu-36-{{.tensorflow_version.value}}-full"
+    {{- end }}
+    {{- if eq .python_version.value "2" }}
+    images:
+      gpu: "kuberlab/tensorflow:gpu-27-{{.tensorflow_version.value}}-full"
+      cpu: "kuberlab/tensorflow:cpu-27-{{.tensorflow_version.value}}-full"
+    {{- end }}
     command: tensorflow_model_server
     args: "--port={{ .serving_port }} --model_name=$TASK_NAME --model_base_path=$TRAINING_DIR/$BUILD_ID"
     {{- else }}
-    {{- if eq .python_version.value "3"}}
+    {{- if eq .python_version.value "3" }}
     images:
-      gpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-gpu-py3"
-      cpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-py3"
+      gpu: "kuberlab/tensorflow:gpu-36-{{.tensorflow_version.value}}-full"
+      cpu: "kuberlab/tensorflow:cpu-36-{{.tensorflow_version.value}}-full"
     {{- end }}
-    {{- if eq .python_version.value "2"}}
+    {{- if eq .python_version.value "2" }}
     images:
-      gpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}-gpu"
-      cpu: "tensorflow/tensorflow:{{.tensorflow_version.value}}"
+      gpu: "kuberlab/tensorflow:gpu-27-{{.tensorflow_version.value}}-full"
+      cpu: "kuberlab/tensorflow:cpu-27-{{.tensorflow_version.value}}-full"
     {{- end }}
     workdir: "$SRC_DIR"
     command: python hello.py
