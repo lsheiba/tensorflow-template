@@ -3,6 +3,7 @@ metadata:
   name: tensorflow
 spec:
   package_manager: "pip{{.python_version.value}}"
+  default_mount_path: "/notebooks"
   packages:
     - names:
       {{- range $i, $value := .packages }}
@@ -10,25 +11,6 @@ spec:
       {{- end }}
       manager: "pip{{.python_version.value}}"
   tasks:
-  - name: prepare-data
-    resources:
-    - name: upload
-      replicas: 1
-      restartPolicy: Never
-      maxRestartCount: 1
-      allowFail: true
-      {{- if eq .python_version.value "3" }}
-      images:
-        cpu: "kuberlab/tensorflow:cpu-36-{{.tensorflow_version.value}}-full"
-      {{- end }}
-      {{- if eq .python_version.value "2" }}
-      images:
-        cpu: "kuberlab/tensorflow:cpu-27-{{.tensorflow_version.value}}-full"
-      {{- end }}
-      command: "echo \"Uploading Data\";echo \"Done!!!\""
-      workdir: "$DATA_DIR"
-      volumes:
-      - name: data
   - name: standalone
     resources:
     - name: worker
@@ -102,43 +84,13 @@ spec:
         gpu: "kuberlab/tensorflow:gpu-27-{{.tensorflow_version.value}}-full"
         cpu: "kuberlab/tensorflow:cpu-27-{{.tensorflow_version.value}}-full"
       {{- end }}
-      command: "echo \"PS: $REPLICA_INDEX\";echo \"PSS: $PS_NODES\"; echo \"WORKERS: $WORKER_NODES\"; echo \"BUILD: $BUILD_ID\"; python"
-      args: hello.py
+      command: "echo \"PS: $REPLICA_INDEX\";echo \"PSS: $PS_NODES\"; echo \"WORKERS: $WORKER_NODES\"; echo \"BUILD: $BUILD_ID\"; python hello.py"
       workdir: "$SRC_DIR"
       port: 2222
       volumes:
       - name: src
       - name: code
       - name: training
-  - name: export
-    resources:
-    - name: worker
-      replicas: 1
-      restartPolicy: Never
-      maxRestartCount: 0
-      allowFail: true
-      {{- if eq .python_version.value "3" }}
-      images:
-        gpu: "kuberlab/tensorflow:gpu-36-{{.tensorflow_version.value}}-full"
-        cpu: "kuberlab/tensorflow:cpu-36-{{.tensorflow_version.value}}-full"
-      {{- end }}
-      {{- if eq .python_version.value "2" }}
-      images:
-        gpu: "kuberlab/tensorflow:gpu-27-{{.tensorflow_version.value}}-full"
-        cpu: "kuberlab/tensorflow:cpu-27-{{.tensorflow_version.value}}-full"
-      {{- end }}
-      command: "echo \"BUILD: $BUILD_ID\"; python hello.py"
-      workdir: "$SRC_DIR"
-      resources:
-        accelerators:
-          gpu: 0
-        requests:
-          cpu: 100m
-          memory: 64Mi
-        limits:
-          cpu: 1000m
-          memory: 4Gi
-      default_volume_mapping: true
   - name: workflow
     resources:
     - name: tasks
@@ -235,8 +187,7 @@ spec:
       gpu: "kuberlab/tensorflow:gpu-27-{{.tensorflow_version.value}}-full"
       cpu: "kuberlab/tensorflow:cpu-27-{{.tensorflow_version.value}}-full"
     {{- end }}
-    command: tensorflow_model_server
-    args: "--port={{ .serving_port }} --model_name=$TASK_NAME --model_base_path=$TRAINING_DIR/$BUILD_ID"
+    command: "tensorflow_model_server --port={{ .serving_port }} --model_name=model --model_base_path=$checkpoint_path"
     {{- else }}
     {{- if eq .python_version.value "3" }}
     images:
@@ -268,26 +219,19 @@ spec:
     default_volume_mapping: true
   volumes:
   - isLibDir: false
-    mountPath: /notebooks/training
     name: training
     clusterStorage: {{ .storage.value }}
-    subPath: training
   - gitRepo:
       repository: https://github.com/kuberlab-catalog/tensorflow
     isLibDir: false
-    mountPath: /notebooks/src
     name: src
     subPath: tensorflow/src
   - isLibDir: true
-    mountPath: /notebooks/lib
     name: lib
     clusterStorage: {{ .storage.value }}
-    subPath: lib
   - isLibDir: false
-    mountPath: /notebooks/data
     name: data
     clusterStorage: {{ .storage.value }}
-    subPath: {{ .data_path }}
   - isLibDir: false
     mountPath: /notebooks
     name: code

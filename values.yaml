@@ -4,8 +4,6 @@ storage:
    name: "Storage Configuration"
    kind: cluster_storage
 
-data_path: data
-
 tensorflow_version:
   value: "1.5.0"
   wizard:
