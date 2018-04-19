@@ -26,7 +26,7 @@ python_version:
     - "2"
     - "3"
 
-serving_port: 9000
+serving_port:
  value: "9000"
  wizard:
    name: "Serving port"

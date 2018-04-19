@@ -153,7 +153,7 @@ spec:
       gpu: "kuberlab/tensorflow:gpu-27-{{.tensorflow_version.value}}-full"
       cpu: "kuberlab/tensorflow:cpu-27-{{.tensorflow_version.value}}-full"
     {{- end }}
-    command: "tensorflow_model_server --port={{ .serving_port }} --model_name=model --model_base_path=$checkpoint_path"
+    command: "tensorflow_model_server --port={{ .serving_port.value }} --model_name=model --model_base_path=$checkpoint_path"
     resources:
       accelerators:
         gpu: 0
@@ -164,8 +164,8 @@ spec:
         cpu: 1000m
         memory: 4Gi
     ports:
-    - port: {{ .serving_port }}
-      targetPort: {{ .serving_port }}
+    - port: {{ .serving_port.value }}
+      targetPort: {{ .serving_port.value }}
       protocol: TCP
       name: http
     default_volume_mapping: true
