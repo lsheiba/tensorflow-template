@@ -159,8 +159,8 @@ spec:
     {{- end }}
     {{- if eq .python_version.value "2" }}
     images:
-      gpu: "kuberlab/tensorflow:gpu-27-{{.tensorflow_version.value}}-full"
-      cpu: "kuberlab/tensorflow:cpu-27-{{.tensorflow_version.value}}-full"
+      gpu: "kuberlab/tensorflow-serving:gpu-27-1.5.0"
+      cpu: "kuberlab/tensorflow-serving:cpu-27-1.5.0"
     {{- end }}
     command: "tensorflow_model_server --port={{ .serving_port.value }} --model_name=model --model_base_path=$checkpoint_path"
     resources:
