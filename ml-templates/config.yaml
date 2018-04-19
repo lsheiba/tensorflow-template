@@ -85,6 +85,15 @@ spec:
       {{- end }}
       command: "echo \"PS: $REPLICA_INDEX\";echo \"PSS: $PS_NODES\"; echo \"WORKERS: $WORKER_NODES\"; echo \"BUILD: $BUILD_ID\"; sleep 300"
       workdir: "$SRC_DIR"
+      resources:
+        accelerators:
+          gpu: 0
+        requests:
+          cpu: 100m
+          memory: 64Mi
+        limits:
+          cpu: 1000m
+          memory: 2Gi
       port: 2222
       default_volume_mapping: true
   uix:
