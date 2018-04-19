@@ -25,6 +25,21 @@ python_version:
     - "3"
 
 serving_port: 9000
+ value: "9000"
+ wizard:
+   name: "Serving port"
+   kind: "text"
 
-tf_serving: false
+src:
+  value: https://github.com/kuberlab/tensorflow-examples
+  wizard:
+    name: "Source Code"
+    kind: git
 
+dataset:
+ value: ''
+ version: ''
+ workspace: ''
+ wizard:
+   name: "Dataset configuration"
+   kind: dataset
