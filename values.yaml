@@ -26,6 +26,18 @@ python_version:
     - "2"
     - "3"
 
+jupter:
+  value: true
+  wizard:
+    name: Install Jupyter
+    kind: boolean
+
+tensorboard:
+  value: true
+  wizard:
+    name: Install Tensorboard
+    kind: boolean
+
 serving_port:
  value: "9000"
  wizard:

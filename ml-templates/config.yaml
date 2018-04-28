@@ -97,6 +97,7 @@ spec:
       port: 2222
       default_volume_mapping: true
   uix:
+  {{- if jupyer.value }}
   - name: jupyter
     displayName: Jupyter
     {{- if eq .python_version.value "3" }}
@@ -122,6 +123,8 @@ spec:
       protocol: TCP
       name: http
     default_volume_mapping: true
+  {{- end }}
+  {{- if tensorboard.value }}
   - name: tensorboard
     displayName: Tensorboard
     command: "tensorboard --logdir=$TRAINING_DIR"
@@ -149,6 +152,7 @@ spec:
         memory: 2Gi
     volumes:
     - name: training
+  {{- end }}
   serving:
   - name: serving
     displayName: Serving
