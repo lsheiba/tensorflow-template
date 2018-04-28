@@ -97,7 +97,7 @@ spec:
       port: 2222
       default_volume_mapping: true
   uix:
-  {{- if .jupyer.value }}
+  {{- if .jupyter.value }}
   - name: jupyter
     displayName: Jupyter
     {{- if eq .python_version.value "3" }}
