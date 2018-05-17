@@ -46,6 +46,8 @@ serving_port:
 
 src:
   value: https://github.com/kuberlab/tensorflow-examples
+  accountId: ''
+  revision: ''
   wizard:
     name: "Source Code"
     kind: git
