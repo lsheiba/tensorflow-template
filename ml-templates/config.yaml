@@ -188,8 +188,8 @@ spec:
     clusterStorage: {{ .storage.value }}
   - gitRepo:
       repository: {{ gitRepo .src.value }}
-      accountId: {{ .src.accountId }}
-      revision: {{ .src.revision }}
+      accountId: '{{ .src.accountId }}'
+      revision: '{{ .src.revision }}'
     isLibDir: false
     name: src
     subPath: {{ gitSubPath .src.value }}
