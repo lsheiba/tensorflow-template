@@ -5,7 +5,7 @@ storage:
    kind: cluster_storage
 
 tensorflow_version:
-  value: "1.9.0"
+  value: "1.14"
   wizard:
     name: "Tensorflow version"
     kind: select
@@ -23,6 +23,8 @@ tensorflow_version:
     - "1.11"
     - "1.12"
     - "1.13"
+    - "1.14"
+    - "2.0.0"
 
 python_version:
   value: "3"
