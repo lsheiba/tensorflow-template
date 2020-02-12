@@ -127,7 +127,11 @@ spec:
   {{- if .tensorboard.value }}
   - name: tensorboard
     displayName: Tensorboard
+    {{- if eq (index .tensorflow_version.value 0) 50 }}
+    command: "tensorboard --logdir=$TRAINING_DIR" --bind_all
+    {{- else }}
     command: "tensorboard --logdir=$TRAINING_DIR"
+    {{- end }}
     {{- if eq .python_version.value "3" }}
     images:
       gpu: "kuberlab/tensorflow:gpu-36-{{.tensorflow_version.value}}-full"
