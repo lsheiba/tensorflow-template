@@ -128,7 +128,7 @@ spec:
   - name: tensorboard
     displayName: Tensorboard
     {{- if eq (index .tensorflow_version.value 0) 50 }}
-    command: "tensorboard --logdir=$TRAINING_DIR" --bind_all
+    command: "tensorboard --logdir=$TRAINING_DIR --bind_all"
     {{- else }}
     command: "tensorboard --logdir=$TRAINING_DIR"
     {{- end }}
